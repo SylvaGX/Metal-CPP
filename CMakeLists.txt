@@ -59,6 +59,8 @@ find_library(METAL_LIBRARY Metal REQUIRED)
 find_library(METALKIT_LIBRARY MetalKit REQUIRED)
 find_library(APPKIT_LIBRARY AppKit REQUIRED)
 find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
+# Add IOKit later
+# find_library(IOKIT_LIBRARY IOKit REQUIRED)
 
 if(METALCPP_ENABLE_QUARTZCORE)
     find_library(QUARTZCORE_LIBRARY QuartzCore REQUIRED)

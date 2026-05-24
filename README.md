@@ -331,9 +331,16 @@ The following documentation describes changes made by SylvaGX to this repository
 
 ### Changelog
 
-| Version | Date | Changes |
-|-|-|-|
+| Version | Date | Changes                                                                                                                                                                                   |
+|-|-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.0.1 | 2026 | Add Roadmap                                                                                                                                                                               |
 | 1.0.0 | 2026 | Initial AppKit C++ bindings release for application lifecycle, windows, events, and menus. Added `AppKit.hpp` entry point, infrastructure headers, and CMake `MetalCPP` INTERFACE target. |
+
+### Roadmap
+
+| Next | Description |
+|-|-|
+| **IOKit** | C++ bindings for IOKit — hardware and device interfaces (HID, power, USB, and related low-level macOS APIs), following the same metal-cpp patterns as AppKit. |
 
 ### AppKit C++ Bindings (macOS)
 
