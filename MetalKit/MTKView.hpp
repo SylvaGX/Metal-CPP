@@ -37,6 +37,8 @@ namespace MTK
 class View : public NS::View
 {
 public:
+    static View* alloc();
+
     View* initWithFrame(NS::Rect frame, MTL::Device* pDevice);
     View* initWithCoder(const NS::Coder* pCoder);
 
@@ -113,6 +115,11 @@ public:
     void draw();
 };
 } // MTK
+
+_MTK_INLINE MTK::View* MTK::View::alloc()
+{
+    return NS::Object::alloc<View>(_MTK_PRIVATE_CLS(MTKView));
+}
 
 _MTK_INLINE MTK::View* MTK::View::initWithFrame(NS::Rect frame, MTL::Device* pDevice)
 {

@@ -333,6 +333,7 @@ The following documentation describes changes made by SylvaGX to this repository
 
 | Version | Date | Changes                                                                                                                                                                                   |
 |-|-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.1.1 | 2026 | Add `MTK::View::alloc()` for creating `MTKView` instances. |
 | 1.1.0 | 2026 | Add MetalKit C++ bindings (`MTKView`, `MTKTextureLoader`, mesh APIs). Make QuartzCore a required dependency in CMake (remove `METALCPP_ENABLE_QUARTZCORE` option). |
 | 1.0.1 | 2026 | Add Roadmap                                                                                                                                                                               |
 | 1.0.0 | 2026 | Initial AppKit C++ bindings release for application lifecycle, windows, events, and menus. Added `AppKit.hpp` entry point, infrastructure headers, and CMake `MetalCPP` INTERFACE target. |
