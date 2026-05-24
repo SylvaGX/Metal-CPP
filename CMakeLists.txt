@@ -1,6 +1,6 @@
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
-# Additional copyright for AppKit contributions:
+# Additional copyright for AppKit and MetalKit contributions:
 #
 # Copyright 2026 SylvaGX.
 #
@@ -19,7 +19,7 @@
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.16)
-project(MetalCPP VERSION 1.0.0 LANGUAGES CXX)
+project(MetalCPP VERSION 1.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,52 +27,40 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(ENV{OBJC_DEBUG_MISSING_POOLS} YES)
 
-option(METALCPP_ENABLE_QUARTZCORE "Add QuartzCore include path and link the QuartzCore framework" OFF)
-
 add_library(MetalCPP INTERFACE
     AppKit
     Foundation
     Metal
     MetalFX
+    MetalKit
+    QuartzCore
 )
-
-if(METALCPP_ENABLE_QUARTZCORE)
-    add_library(MetalCPP INTERFACE
-        QuartzCore
-    )
-endif()
 
 target_include_directories(MetalCPP INTERFACE
     "${CMAKE_CURRENT_SOURCE_DIR}/AppKit"
     "${CMAKE_CURRENT_SOURCE_DIR}/Foundation"
     "${CMAKE_CURRENT_SOURCE_DIR}/Metal"
     "${CMAKE_CURRENT_SOURCE_DIR}/MetalFX"
+    "${CMAKE_CURRENT_SOURCE_DIR}/MetalKit"
+    "${CMAKE_CURRENT_SOURCE_DIR}/QuartzCore"
 )
-
-if(METALCPP_ENABLE_QUARTZCORE)
-    target_include_directories(MetalCPP INTERFACE
-        "${CMAKE_CURRENT_SOURCE_DIR}/QuartzCore"
-    )
-endif()
 
 find_library(METAL_LIBRARY Metal REQUIRED)
 find_library(METALKIT_LIBRARY MetalKit REQUIRED)
+find_library(METALFX_LIBRARY MetalFX REQUIRED)
 find_library(APPKIT_LIBRARY AppKit REQUIRED)
 find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
+find_library(QUARTZCORE_LIBRARY QuartzCore REQUIRED)
+find_library(MODELIO_LIBRARY ModelIO REQUIRED)
 # Add IOKit later
 # find_library(IOKIT_LIBRARY IOKit REQUIRED)
-
-if(METALCPP_ENABLE_QUARTZCORE)
-    find_library(QUARTZCORE_LIBRARY QuartzCore REQUIRED)
-endif()
 
 target_link_libraries(MetalCPP INTERFACE
     ${METAL_LIBRARY}
     ${METALKIT_LIBRARY}
+    ${METALFX_LIBRARY}
     ${APPKIT_LIBRARY}
     ${FOUNDATION_LIBRARY}
+    ${QUARTZCORE_LIBRARY}
+    ${MODELIO_LIBRARY}
 )
-
-if(METALCPP_ENABLE_QUARTZCORE)
-    target_link_libraries(MetalCPP INTERFACE {QUARTZCORE_LIBRARY})
-endif()

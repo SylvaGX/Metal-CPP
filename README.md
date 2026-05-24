@@ -125,7 +125,7 @@ If you want to use the QuartzCore wrapper, add:
 Purely optional: You can generate a single header file that contains all **metal-cpp** headers via:
 
 ```shell
-./SingleHeader/MakeSingleHeader.py Foundation/Foundation.hpp QuartzCore/QuartzCore.hpp Metal/Metal.hpp MetalFX/MetalFX.hpp
+./SingleHeader/MakeSingleHeader.py Foundation/Foundation.hpp QuartzCore/QuartzCore.hpp Metal/Metal.hpp MetalFX/MetalFX.hpp MetalKit/MetalKit.hpp
 ```
 
 By default the generator script writes its output to `./SingleHeader/Metal.hpp`. Use the `-o` option to customize output filename.
@@ -333,6 +333,7 @@ The following documentation describes changes made by SylvaGX to this repository
 
 | Version | Date | Changes                                                                                                                                                                                   |
 |-|-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.1.0 | 2026 | Add MetalKit C++ bindings (`MTKView`, `MTKTextureLoader`, mesh APIs). Make QuartzCore a required dependency in CMake (remove `METALCPP_ENABLE_QUARTZCORE` option). |
 | 1.0.1 | 2026 | Add Roadmap                                                                                                                                                                               |
 | 1.0.0 | 2026 | Initial AppKit C++ bindings release for application lifecycle, windows, events, and menus. Added `AppKit.hpp` entry point, infrastructure headers, and CMake `MetalCPP` INTERFACE target. |
 
@@ -361,20 +362,42 @@ Simply include `AppKit.hpp`. To ensure that the selector and class symbols are l
 
 Link against AppKit and Foundation.
 
-When using AppKit together with Metal and QuartzCore, define all required implementation macros in one translation unit:
+When using AppKit together with Metal, QuartzCore, and MetalKit, define all required implementation macros in one translation unit:
 
 ```cpp
 #define NS_PRIVATE_IMPLEMENTATION
 #define AK_PRIVATE_IMPLEMENTATION
 #define CA_PRIVATE_IMPLEMENTATION
 #define MTL_PRIVATE_IMPLEMENTATION
+#define MTK_PRIVATE_IMPLEMENTATION
 
 #include "AppKit.hpp"
 ```
 
-> [!NOTE]
-> QuartzCore is optional in CMake. By default, `MetalCPP` does not add the QuartzCore include path or link the framework. If you use `QuartzCore/QuartzCore.hpp`, configure with `-DMETALCPP_ENABLE_QUARTZCORE=ON`.
-
-If you use CMake, `target_link_libraries(YourTarget PRIVATE MetalCPP)` provides the AppKit include paths and required frameworks (see `CMakeLists.txt`).
+If you use CMake, `target_link_libraries(YourTarget PRIVATE MetalCPP)` provides the AppKit, MetalKit, and QuartzCore include paths and required frameworks (see `CMakeLists.txt`).
 
 To include AppKit in the optional single-header bundle, add `AppKit/AppKit.hpp` to the `MakeSingleHeader.py` command in [Generating a Single Header File](#generating-a-single-header-file) above.
+
+### MetalKit C++ Bindings (macOS)
+
+MetalKit C++ bindings provide a header-only C++ interface to Apple's MetalKit framework for Metal rendering views, texture loading, and Model I/O mesh integration. MetalKit classes map to the `MTK::` namespace (for example, `MTKView` → `MTK::View`).
+
+**Platform:** macOS only.
+
+#### Adding MetalKit to a Project
+
+Include `MetalKit/MetalKit.hpp`. To ensure that selector, class, and constant symbols are linked, add to one of your cpp files:
+
+```cpp
+#define NS_PRIVATE_IMPLEMENTATION
+#define AK_PRIVATE_IMPLEMENTATION
+#define CA_PRIVATE_IMPLEMENTATION
+#define MTL_PRIVATE_IMPLEMENTATION
+#define MTK_PRIVATE_IMPLEMENTATION
+
+#include "MetalKit/MetalKit.hpp"
+```
+
+The `MetalCPP` CMake target links MetalKit, ModelIO, QuartzCore, AppKit, Foundation, Metal, and MetalFX.
+
+To include MetalKit in the optional single-header bundle, add `MetalKit/MetalKit.hpp` to the `MakeSingleHeader.py` command in [Generating a Single Header File](#generating-a-single-header-file) above.

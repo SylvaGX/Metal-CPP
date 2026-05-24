@@ -145,6 +145,11 @@ _AK_OPTIONS(UInteger, AutoresizingMaskOptions) {
     ViewMaxYMargin    = 32,
 };
 
+_AK_ENUM(Integer, DisplayGamut) {
+    DisplayGamutSRGB = -1,
+    DisplayGamutP3   = 0,
+};
+
 _AK_ENUM(Integer, PanelStyle) {
     PanelStyleNonactivating = 128,
 };
