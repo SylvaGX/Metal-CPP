@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //
-// MetalKit/MTKTypes.hpp
+// ModelIO/MDLVertexDescriptor.hpp
 //
 // Copyright 2026 SylvaGX.
 //
@@ -20,5 +20,14 @@
 
 #pragma once
 
-#include "../ModelIO/MDLTypes.hpp"
-#include "../ModelIO/MDLEnums.hpp"
+#include "../Foundation/Foundation.hpp"
+#include "MDLDefines.hpp"
+#include "MDLPrivate.hpp"
+#include "MDLTypes.hpp"
+
+namespace MDL
+{
+class VertexDescriptor : public NS::Copying<VertexDescriptor>
+{
+};
+} // MDL

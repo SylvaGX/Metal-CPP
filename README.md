@@ -333,6 +333,7 @@ The following documentation describes changes made by SylvaGX to this repository
 
 | Version | Date | Changes                                                                                                                                                                                   |
 |-|-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.1.2 | 2026 | Add ModelIO C++ bindings (`MDL::Asset`, `MDL::Mesh`, `MDL::Texture`, `MDL::VertexDescriptor`, enums). MetalKit no longer includes native `<ModelIO/ModelIO.h>`. |
 | 1.1.1 | 2026 | Add `MTK::View::alloc()` for creating `MTKView` instances. |
 | 1.1.0 | 2026 | Add MetalKit C++ bindings (`MTKView`, `MTKTextureLoader`, mesh APIs). Make QuartzCore a required dependency in CMake (remove `METALCPP_ENABLE_QUARTZCORE` option). |
 | 1.0.1 | 2026 | Add Roadmap                                                                                                                                                                               |
@@ -363,19 +364,27 @@ Simply include `AppKit.hpp`. To ensure that the selector and class symbols are l
 
 Link against AppKit and Foundation.
 
-When using AppKit together with Metal, QuartzCore, and MetalKit, define all required implementation macros in one translation unit:
+When using AppKit together with Metal, MetalFX, QuartzCore, MetalKit, and ModelIO, define all required implementation macros in one translation unit:
 
 ```cpp
 #define NS_PRIVATE_IMPLEMENTATION
 #define AK_PRIVATE_IMPLEMENTATION
 #define CA_PRIVATE_IMPLEMENTATION
 #define MTL_PRIVATE_IMPLEMENTATION
+#define MTLFX_PRIVATE_IMPLEMENTATION
+#define MDL_PRIVATE_IMPLEMENTATION
 #define MTK_PRIVATE_IMPLEMENTATION
 
-#include "AppKit.hpp"
+#include "Foundation/Foundation.hpp"
+#include "Metal/Metal.hpp"
+#include "MetalFX/MetalFX.hpp"
+#include "QuartzCore/QuartzCore.hpp"
+#include "AppKit/AppKit.hpp"
+#include "ModelIO/ModelIO.hpp"
+#include "MetalKit/MetalKit.hpp"
 ```
 
-If you use CMake, `target_link_libraries(YourTarget PRIVATE MetalCPP)` provides the AppKit, MetalKit, and QuartzCore include paths and required frameworks (see `CMakeLists.txt`).
+If you use CMake, `target_link_libraries(YourTarget PRIVATE MetalCPP)` provides the Foundation, Metal, MetalFX, QuartzCore, AppKit, MetalKit, and ModelIO include paths and required frameworks (see `CMakeLists.txt`).
 
 To include AppKit in the optional single-header bundle, add `AppKit/AppKit.hpp` to the `MakeSingleHeader.py` command in [Generating a Single Header File](#generating-a-single-header-file) above.
 
@@ -394,11 +403,42 @@ Include `MetalKit/MetalKit.hpp`. To ensure that selector, class, and constant sy
 #define AK_PRIVATE_IMPLEMENTATION
 #define CA_PRIVATE_IMPLEMENTATION
 #define MTL_PRIVATE_IMPLEMENTATION
+#define MTLFX_PRIVATE_IMPLEMENTATION
+#define MDL_PRIVATE_IMPLEMENTATION
 #define MTK_PRIVATE_IMPLEMENTATION
 
+#include "Foundation/Foundation.hpp"
+#include "Metal/Metal.hpp"
+#include "MetalFX/MetalFX.hpp"
+#include "QuartzCore/QuartzCore.hpp"
+#include "AppKit/AppKit.hpp"
+#include "ModelIO/ModelIO.hpp"
 #include "MetalKit/MetalKit.hpp"
 ```
 
 The `MetalCPP` CMake target links MetalKit, ModelIO, QuartzCore, AppKit, Foundation, Metal, and MetalFX.
 
+To include only `MTK::View` without mesh or texture loader APIs, include `MetalKit/MTKView.hpp` directly — no ModelIO macro is required.
+
 To include MetalKit in the optional single-header bundle, add `MetalKit/MetalKit.hpp` to the `MakeSingleHeader.py` command in [Generating a Single Header File](#generating-a-single-header-file) above.
+
+### ModelIO C++ Bindings (macOS)
+
+ModelIO C++ bindings provide a header-only C++ interface to Apple's ModelIO framework for loading 3D assets and working with mesh data. ModelIO classes map to the `MDL::` namespace (for example, `MDLAsset` → `MDL::Asset`).
+
+**Platform:** macOS only.
+
+#### Adding ModelIO to a Project
+
+Include `ModelIO/ModelIO.hpp`. To ensure that selector and class symbols are linked, add to one of your cpp files:
+
+```cpp
+#define NS_PRIVATE_IMPLEMENTATION
+#define MDL_PRIVATE_IMPLEMENTATION
+
+#include "ModelIO/ModelIO.hpp"
+```
+
+When using ModelIO together with MetalKit mesh or texture APIs, also define `MTK_PRIVATE_IMPLEMENTATION` as shown in the MetalKit section above.
+
+To include ModelIO in the optional single-header bundle, add `ModelIO/ModelIO.hpp` to the `MakeSingleHeader.py` command in [Generating a Single Header File](#generating-a-single-header-file) above.

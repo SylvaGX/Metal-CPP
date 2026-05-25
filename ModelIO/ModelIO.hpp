@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //
-// MetalKit/MTKTypes.hpp
+// ModelIO/ModelIO.hpp
 //
 // Copyright 2026 SylvaGX.
 //
@@ -20,5 +20,10 @@
 
 #pragma once
 
-#include "../ModelIO/MDLTypes.hpp"
-#include "../ModelIO/MDLEnums.hpp"
+#include "MDLAsset.hpp"
+#include "MDLEnums.hpp"
+#include "MDLMesh.hpp"
+#include "MDLMeshBufferAllocator.hpp"
+#include "MDLMeshBufferZone.hpp"
+#include "MDLTexture.hpp"
+#include "MDLVertexDescriptor.hpp"

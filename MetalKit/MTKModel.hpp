@@ -29,12 +29,12 @@
 #include "MTKPrivate.hpp"
 #include "MTKTypes.hpp"
 
-extern "C" MDLVertexDescriptor* MTKModelIOVertexDescriptorFromMetal(void* metalDescriptor);
-extern "C" MDLVertexDescriptor* MTKModelIOVertexDescriptorFromMetalWithError(void* metalDescriptor, void** error);
-extern "C" void* MTKMetalVertexDescriptorFromModelIO(MDLVertexDescriptor* modelIODescriptor);
-extern "C" void* MTKMetalVertexDescriptorFromModelIOWithError(MDLVertexDescriptor* modelIODescriptor, void** error);
-extern "C" MDLVertexFormat MTKModelIOVertexFormatFromMetal(NS::UInteger vertexFormat);
-extern "C" NS::UInteger MTKMetalVertexFormatFromModelIO(MDLVertexFormat vertexFormat);
+extern "C" void* MTKModelIOVertexDescriptorFromMetal(void* metalDescriptor);
+extern "C" void* MTKModelIOVertexDescriptorFromMetalWithError(void* metalDescriptor, void** error);
+extern "C" void* MTKMetalVertexDescriptorFromModelIO(void* modelIODescriptor);
+extern "C" void* MTKMetalVertexDescriptorFromModelIOWithError(void* modelIODescriptor, void** error);
+extern "C" NS::UInteger MTKModelIOVertexFormatFromMetal(NS::UInteger vertexFormat);
+extern "C" NS::UInteger MTKMetalVertexFormatFromModelIO(NS::UInteger vertexFormat);
 
 namespace MTK
 {
@@ -65,7 +65,7 @@ public:
     MDL::MeshBufferZone* zone() const;
     MTL::Buffer*         buffer() const;
     NS::UInteger         offset() const;
-    MDLMeshBufferType    type() const;
+    MDL::MeshBufferType  type() const;
 };
 
 class Submesh : public NS::Referencing<Submesh>
@@ -101,8 +101,8 @@ MDL::VertexDescriptor* ModelIOVertexDescriptorFromMetal(MTL::VertexDescriptor* p
 MDL::VertexDescriptor* ModelIOVertexDescriptorFromMetalWithError(MTL::VertexDescriptor* pDescriptor, NS::Error** ppError);
 MTL::VertexDescriptor* MetalVertexDescriptorFromModelIO(MDL::VertexDescriptor* pDescriptor);
 MTL::VertexDescriptor* MetalVertexDescriptorFromModelIOWithError(MDL::VertexDescriptor* pDescriptor, NS::Error** ppError);
-MDLVertexFormat        ModelIOVertexFormatFromMetal(MTL::VertexFormat vertexFormat);
-MTL::VertexFormat      MetalVertexFormatFromModelIO(MDLVertexFormat vertexFormat);
+MDL::VertexFormat      ModelIOVertexFormatFromMetal(MTL::VertexFormat vertexFormat);
+MTL::VertexFormat      MetalVertexFormatFromModelIO(MDL::VertexFormat vertexFormat);
 } // MTK
 
 namespace MTK
@@ -151,9 +151,9 @@ _MTK_INLINE NS::UInteger MTK::MeshBuffer::offset() const
     return Object::sendMessage<NS::UInteger>(this, _MTK_PRIVATE_SEL(offset));
 }
 
-_MTK_INLINE MDLMeshBufferType MTK::MeshBuffer::type() const
+_MTK_INLINE MDL::MeshBufferType MTK::MeshBuffer::type() const
 {
-    return Object::sendMessage<MDLMeshBufferType>(this, _MTK_PRIVATE_SEL(type));
+    return Object::sendMessage<MDL::MeshBufferType>(this, _MTK_PRIVATE_SEL(type));
 }
 
 _MTK_INLINE MTL::PrimitiveType MTK::Submesh::primitiveType() const
@@ -248,20 +248,20 @@ _MTK_INLINE MDL::VertexDescriptor* MTK::ModelIOVertexDescriptorFromMetalWithErro
 
 _MTK_INLINE MTL::VertexDescriptor* MTK::MetalVertexDescriptorFromModelIO(MDL::VertexDescriptor* pDescriptor)
 {
-    return static_cast<MTL::VertexDescriptor*>(MTKMetalVertexDescriptorFromModelIO(reinterpret_cast<MDLVertexDescriptor*>(pDescriptor)));
+    return static_cast<MTL::VertexDescriptor*>(MTKMetalVertexDescriptorFromModelIO(pDescriptor));
 }
 
 _MTK_INLINE MTL::VertexDescriptor* MTK::MetalVertexDescriptorFromModelIOWithError(MDL::VertexDescriptor* pDescriptor, NS::Error** ppError)
 {
-    return static_cast<MTL::VertexDescriptor*>(MTKMetalVertexDescriptorFromModelIOWithError(reinterpret_cast<MDLVertexDescriptor*>(pDescriptor), reinterpret_cast<void**>(ppError)));
+    return static_cast<MTL::VertexDescriptor*>(MTKMetalVertexDescriptorFromModelIOWithError(pDescriptor, reinterpret_cast<void**>(ppError)));
 }
 
-_MTK_INLINE MDLVertexFormat MTK::ModelIOVertexFormatFromMetal(MTL::VertexFormat vertexFormat)
+_MTK_INLINE MDL::VertexFormat MTK::ModelIOVertexFormatFromMetal(MTL::VertexFormat vertexFormat)
 {
-    return MTKModelIOVertexFormatFromMetal(static_cast<NS::UInteger>(vertexFormat));
+    return static_cast<MDL::VertexFormat>(MTKModelIOVertexFormatFromMetal(static_cast<NS::UInteger>(vertexFormat)));
 }
 
-_MTK_INLINE MTL::VertexFormat MTK::MetalVertexFormatFromModelIO(MDLVertexFormat vertexFormat)
+_MTK_INLINE MTL::VertexFormat MTK::MetalVertexFormatFromModelIO(MDL::VertexFormat vertexFormat)
 {
-    return static_cast<MTL::VertexFormat>(MTKMetalVertexFormatFromModelIO(vertexFormat));
+    return static_cast<MTL::VertexFormat>(MTKMetalVertexFormatFromModelIO(static_cast<NS::UInteger>(vertexFormat)));
 }

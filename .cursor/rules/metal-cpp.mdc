@@ -1,0 +1,96 @@
+---
+description: Metal-CPP header-only C++ binding conventions (Apple + SylvaGX frameworks)
+alwaysApply: true
+---
+
+# Metal-CPP Project Rules
+
+This repo provides **header-only C++ bindings** for Apple frameworks (Foundation, Metal, QuartzCore, MetalFX) and SylvaGX contributions (AppKit, MetalKit, ModelIO). Bindings map ObjC classes to C++ namespaces via `objc_msgSend` — they must compile as **plain C++**, never requiring ObjC syntax in headers.
+
+## Critical: No Native ObjC Framework Headers
+
+**Never** `#import` or `#include` native ObjC umbrella/API headers in binding headers:
+
+- Forbidden: `<Foundation/Foundation.h>`, `<AppKit/AppKit.h>`, `<ModelIO/ModelIO.h>`, `<MetalKit/MetalKit.h>`, `<QuartzCore/QuartzCore.h>`, etc.
+- These contain `@class`, `@interface`, and other syntax that breaks C++ parsing.
+
+**Allowed** C/C-compatible system headers (already used in the project):
+
+- `<objc/runtime.h>`, `<objc/message.h>` — runtime only
+- `<CoreFoundation/CoreFoundation.h>`, `<CoreGraphics/*.h>`, `<dispatch/dispatch.h>`, `<simd/simd.h>`, `<IOSurface/IOSurfaceRef.h>`
+
+When a type is needed from a framework without a C++ binding yet, add C++ wrapper headers under the appropriate folder — do not include the native `.h`.
+
+## Framework Layout
+
+Each binding target follows this pattern:
+
+```
+FrameworkName/
+  FrameworkName.hpp      # Umbrella (optional for internal deps like ModelIO)
+  XXDefines.hpp            # _XX_EXPORT, _XX_INLINE, _XX_ENUM → wraps _NS_*
+  XXPrivate.hpp            # _XX_PRIVATE_CLS/SEL/PRO; XX_PRIVATE_IMPLEMENTATION block
+  XXTypes.hpp              # Forward declarations (optional)
+  XX*Enums.hpp             # Enums with values copied manually from SDK
+  ClassName.hpp            # One class per file (flat or subfolder for large targets)
+```
+
+**Namespace mapping:** `NSView` → `NS::View`, `MTKView` → `MTK::View`, `MDLAsset` → `MDL::Asset`.
+
+## Per-Class Header Pattern
+
+1. `#pragma once` + copyright block (Apple for Apple files; SylvaGX for SylvaGX files)
+2. Include peer C++ headers + `XXDefines.hpp` + `XXPrivate.hpp`
+3. Class inherits `NS::Referencing<T>` or `NS::Copying<T>` as appropriate
+4. Parameter names use `p` prefix (`pDevice`, `pURL`)
+5. Inline implementations at bottom via `_XX_INLINE` + `Object::sendMessage<>()`
+6. `alloc()` uses `NS::Object::alloc<T>(_XX_PRIVATE_CLS(ObjCClassName))`
+
+## Private Implementation (One Translation Unit)
+
+Consumers define implementation macros in **one** `.mm` or `.cpp` file:
+
+```cpp
+#define NS_PRIVATE_IMPLEMENTATION
+#define AK_PRIVATE_IMPLEMENTATION   // AppKit
+#define CA_PRIVATE_IMPLEMENTATION   // QuartzCore
+#define MTL_PRIVATE_IMPLEMENTATION  // Metal
+#define MDL_PRIVATE_IMPLEMENTATION  // ModelIO
+#define MTK_PRIVATE_IMPLEMENTATION  // MetalKit
+#include "MetalKit/MetalKit.hpp"
+```
+
+- `MTKView.hpp` alone does not require ModelIO macros.
+- Full `MetalKit.hpp` (meshes/textures) requires `MDL_PRIVATE_IMPLEMENTATION` + `MTK_PRIVATE_IMPLEMENTATION`.
+
+## Adding or Extending Bindings
+
+- **Do not bind deprecated APIs** — check SDK headers for `API_DEPRECATED`, `NS_DEPRECATED`, etc.
+- Copy enum values manually into `_XX_ENUM` blocks; do not include SDK enum headers that pull ObjC.
+- For cross-framework C bridge functions (e.g. MetalKit ↔ ModelIO), declare with `void*` / `NS::UInteger` in headers; cast to C++ types in inline wrappers.
+- Register new classes/selectors in the target's `XXPrivate.hpp` under `#if defined(XX_PRIVATE_IMPLEMENTATION)`.
+- Add new SylvaGX targets to `CMakeLists.txt`: `add_library(MetalCPP INTERFACE ...)`, include path, and `find_library` + `target_link_libraries`.
+
+## Copyright
+
+- **Apple headers** (Foundation, Metal, QuartzCore, MetalFX): preserve Apple copyright; append SylvaGX block only when editing.
+- **SylvaGX headers** (AppKit, MetalKit, ModelIO): Apache 2.0, Copyright 2026 SylvaGX.
+
+## Scope and Style
+
+- **macOS only** for AppKit, MetalKit, ModelIO.
+- Minimize diff scope — match surrounding binding style; no unrelated refactors.
+- Bump `project(MetalCPP VERSION ...)` and SylvaGX README changelog for binding releases.
+- Do not commit unless explicitly asked.
+
+## Current Targets (v1.1.2)
+
+| Folder | Namespace | Macro |
+|--------|-----------|-------|
+| Foundation | `NS::` | `NS_PRIVATE_IMPLEMENTATION` |
+| AppKit | `NS::` | `AK_PRIVATE_IMPLEMENTATION` |
+| Metal | `MTL::` | `MTL_PRIVATE_IMPLEMENTATION` |
+| MetalFX | `MTLFX::` | `MTLFX_PRIVATE_IMPLEMENTATION` |
+| QuartzCore | `CA::` | `CA_PRIVATE_IMPLEMENTATION` |
+| ModelIO | `MDL::` | `MDL_PRIVATE_IMPLEMENTATION` |
+| MetalKit | `MTK::` | `MTK_PRIVATE_IMPLEMENTATION` |

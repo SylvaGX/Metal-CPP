@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //
-// MetalKit/MTKTypes.hpp
+// ModelIO/MDLTypes.hpp
 //
 // Copyright 2026 SylvaGX.
 //
@@ -20,5 +20,12 @@
 
 #pragma once
 
-#include "../ModelIO/MDLTypes.hpp"
-#include "../ModelIO/MDLEnums.hpp"
+namespace MDL
+{
+class Asset;
+class Mesh;
+class MeshBufferAllocator;
+class MeshBufferZone;
+class Texture;
+class VertexDescriptor;
+}
