@@ -38,6 +38,7 @@ add_library(MetalCPP INTERFACE
 )
 
 target_include_directories(MetalCPP INTERFACE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/AppKit"
     "${CMAKE_CURRENT_SOURCE_DIR}/Foundation"
     "${CMAKE_CURRENT_SOURCE_DIR}/Metal"
