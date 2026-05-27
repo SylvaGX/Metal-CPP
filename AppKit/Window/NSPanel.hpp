@@ -32,6 +32,8 @@ namespace NS
 class Panel : public Window
 {
 public:
+    static Panel* alloc();
+
     Panel* initWithContentRect(Rect contentRect, WindowStyleMask style, BackingStoreType backingStoreType, bool defer);
 
     bool isFloatingPanel() const;
@@ -40,6 +42,11 @@ public:
     bool worksWhenModal() const;
     void setWorksWhenModal(bool worksWhenModal);
 };
+}
+
+_AK_INLINE NS::Panel* NS::Panel::alloc()
+{
+    return Object::alloc<Panel>(_AK_PRIVATE_CLS(NSPanel));
 }
 
 _AK_INLINE NS::Panel* NS::Panel::initWithContentRect(Rect contentRect, WindowStyleMask style, BackingStoreType backingStoreType, bool defer)

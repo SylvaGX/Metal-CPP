@@ -29,11 +29,14 @@
 
 namespace NS
 {
+class Array;
 class Window;
 
 class View : public Responder
 {
 public:
+    static View* alloc();
+
     View* initWithFrame(Rect frame);
 
     Rect  frame() const;
@@ -46,15 +49,36 @@ public:
     bool  wantsLayer() const;
     void  setWantsLayer(bool wantsLayer);
     void* layer() const;
+    void  setLayer(void* pLayer);
+
+    bool isHidden() const;
+    void setHidden(bool hidden);
+
+    View* superview() const;
+    Array* subviews() const;
 
     void addSubview(View* pView);
     void removeFromSuperview();
+
+    Point convertPointToView(Point point, View* pView) const;
+    Point convertPointFromView(Point point, View* pView) const;
+
+    void setNeedsDisplay(bool needsDisplay);
+    void display();
+    void displayIfNeeded();
+
+    View* hitTest(Point point);
 
     Window* window() const;
 
     AutoresizingMaskOptions autoresizingMask() const;
     void                    setAutoresizingMask(AutoresizingMaskOptions autoresizingMask);
 };
+}
+
+_AK_INLINE NS::View* NS::View::alloc()
+{
+    return Object::alloc<View>(_AK_PRIVATE_CLS(NSView));
 }
 
 _AK_INLINE NS::View* NS::View::initWithFrame(Rect frame)
@@ -102,6 +126,31 @@ _AK_INLINE void* NS::View::layer() const
     return Object::sendMessage<void*>(this, _AK_PRIVATE_SEL(layer));
 }
 
+_AK_INLINE void NS::View::setLayer(void* pLayer)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setLayer_), pLayer);
+}
+
+_AK_INLINE bool NS::View::isHidden() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(hidden));
+}
+
+_AK_INLINE void NS::View::setHidden(bool hidden)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setHidden_), hidden);
+}
+
+_AK_INLINE NS::View* NS::View::superview() const
+{
+    return Object::sendMessage<View*>(this, _AK_PRIVATE_SEL(superview));
+}
+
+_AK_INLINE NS::Array* NS::View::subviews() const
+{
+    return Object::sendMessage<Array*>(this, _AK_PRIVATE_SEL(subviews));
+}
+
 _AK_INLINE void NS::View::addSubview(View* pView)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(addSubview_), pView);
@@ -110,6 +159,36 @@ _AK_INLINE void NS::View::addSubview(View* pView)
 _AK_INLINE void NS::View::removeFromSuperview()
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(removeFromSuperview));
+}
+
+_AK_INLINE NS::Point NS::View::convertPointToView(Point point, View* pView) const
+{
+    return Object::sendMessage<Point>(this, _AK_PRIVATE_SEL(convertPoint_toView_), point, pView);
+}
+
+_AK_INLINE NS::Point NS::View::convertPointFromView(Point point, View* pView) const
+{
+    return Object::sendMessage<Point>(this, _AK_PRIVATE_SEL(convertPoint_fromView_), point, pView);
+}
+
+_AK_INLINE void NS::View::setNeedsDisplay(bool needsDisplay)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setNeedsDisplay_), needsDisplay);
+}
+
+_AK_INLINE void NS::View::display()
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(display));
+}
+
+_AK_INLINE void NS::View::displayIfNeeded()
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(displayIfNeeded));
+}
+
+_AK_INLINE NS::View* NS::View::hitTest(Point point)
+{
+    return Object::sendMessage<View*>(this, _AK_PRIVATE_SEL(hitTest_), point);
 }
 
 _AK_INLINE NS::Window* NS::View::window() const

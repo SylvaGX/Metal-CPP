@@ -83,7 +83,7 @@ Consumers define implementation macros in **one** `.mm` or `.cpp` file:
 - Bump `project(MetalCPP VERSION ...)` and SylvaGX README changelog for binding releases.
 - Do not commit unless explicitly asked.
 
-## Current Targets (v1.1.2)
+## Current Targets (v1.2.0)
 
 | Folder | Namespace | Macro |
 |--------|-----------|-------|

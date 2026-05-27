@@ -32,6 +32,8 @@ namespace NS
 class WindowController : public Responder
 {
 public:
+    static WindowController* alloc();
+
     WindowController* initWithWindow(Window* pWindow);
 
     Window* window() const;
@@ -40,6 +42,11 @@ public:
     void showWindow(void* pSender);
     void close();
 };
+}
+
+_AK_INLINE NS::WindowController* NS::WindowController::alloc()
+{
+    return Object::alloc<WindowController>(_AK_PRIVATE_CLS(NSWindowController));
 }
 
 _AK_INLINE NS::WindowController* NS::WindowController::initWithWindow(Window* pWindow)

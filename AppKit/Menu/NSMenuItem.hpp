@@ -34,6 +34,9 @@ class String;
 class MenuItem : public Referencing<MenuItem, Object>
 {
 public:
+    static MenuItem* alloc();
+    static MenuItem* separatorItem();
+
     MenuItem* init();
     MenuItem* initWithTitle(String* pTitle, SEL action, void* pTarget, String* pKeyEquivalent);
 
@@ -58,12 +61,27 @@ public:
     bool isEnabled() const;
     void setEnabled(bool enabled);
 
+    bool isSeparatorItem() const;
+
     Integer tag() const;
     void    setTag(Integer tag);
 
-    Integer state() const;
-    void    setState(Integer state);
+    MenuItemState state() const;
+    void          setState(MenuItemState state);
+
+    void* representedObject() const;
+    void  setRepresentedObject(void* pObject);
 };
+}
+
+_AK_INLINE NS::MenuItem* NS::MenuItem::alloc()
+{
+    return Object::alloc<MenuItem>(_AK_PRIVATE_CLS(NSMenuItem));
+}
+
+_AK_INLINE NS::MenuItem* NS::MenuItem::separatorItem()
+{
+    return Object::sendMessage<MenuItem*>(_AK_PRIVATE_CLS(NSMenuItem), _AK_PRIVATE_SEL(separatorItem));
 }
 
 _AK_INLINE NS::MenuItem* NS::MenuItem::init()
@@ -146,6 +164,11 @@ _AK_INLINE void NS::MenuItem::setEnabled(bool enabled)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setEnabled_), enabled);
 }
 
+_AK_INLINE bool NS::MenuItem::isSeparatorItem() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(isSeparatorItem));
+}
+
 _AK_INLINE NS::Integer NS::MenuItem::tag() const
 {
     return Object::sendMessage<Integer>(this, _AK_PRIVATE_SEL(tag));
@@ -156,12 +179,22 @@ _AK_INLINE void NS::MenuItem::setTag(Integer tag)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setTag_), tag);
 }
 
-_AK_INLINE NS::Integer NS::MenuItem::state() const
+_AK_INLINE NS::MenuItemState NS::MenuItem::state() const
 {
-    return Object::sendMessage<Integer>(this, _AK_PRIVATE_SEL(state));
+    return Object::sendMessage<MenuItemState>(this, _AK_PRIVATE_SEL(state));
 }
 
-_AK_INLINE void NS::MenuItem::setState(Integer state)
+_AK_INLINE void NS::MenuItem::setState(MenuItemState state)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setState_), state);
+}
+
+_AK_INLINE void* NS::MenuItem::representedObject() const
+{
+    return Object::sendMessage<void*>(this, _AK_PRIVATE_SEL(representedObject));
+}
+
+_AK_INLINE void NS::MenuItem::setRepresentedObject(void* pObject)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setRepresentedObject_), pObject);
 }

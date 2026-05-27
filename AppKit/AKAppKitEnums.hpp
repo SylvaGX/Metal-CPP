@@ -166,4 +166,46 @@ _AK_OPTIONS(UInteger, WindowCollectionBehavior) {
     WindowCollectionBehaviorFullScreenAllowsTiling = 1 << 11,
     WindowCollectionBehaviorFullScreenDisallowsTiling = 1 << 12,
 };
+
+_AK_OPTIONS(UInteger, ApplicationPresentationOptions) {
+    ApplicationPresentationDefault                      = 0,
+    ApplicationPresentationAutoHideDock               = 1 << 0,
+    ApplicationPresentationHideDock                   = 1 << 1,
+    ApplicationPresentationAutoHideMenuBar            = 1 << 2,
+    ApplicationPresentationHideMenuBar                = 1 << 3,
+    ApplicationPresentationDisableAppleMenu           = 1 << 4,
+    ApplicationPresentationDisableProcessSwitching    = 1 << 5,
+    ApplicationPresentationDisableForceQuit           = 1 << 6,
+    ApplicationPresentationDisableSessionTermination  = 1 << 7,
+    ApplicationPresentationDisableHideApplication     = 1 << 8,
+    ApplicationPresentationDisableMenuBarTransparency = 1 << 9,
+    ApplicationPresentationFullScreen                 = 1 << 10,
+    ApplicationPresentationAutoHideToolbar            = 1 << 11,
+    ApplicationPresentationDisableCursorLocationAssistance = 1 << 12,
+};
+
+_AK_ENUM(Integer, MenuItemState) {
+    MenuItemStateMixed = -1,
+    MenuItemStateOff   = 0,
+    MenuItemStateOn    = 1,
+};
+
+_AK_OPTIONS(UInteger, ScrollPhase) {
+    ScrollPhaseNone       = 0,
+    ScrollPhaseBegan      = 1 << 0,
+    ScrollPhaseStationary = 1 << 1,
+    ScrollPhaseChanged    = 1 << 2,
+    ScrollPhaseEnded      = 1 << 3,
+    ScrollPhaseCancelled  = 1 << 4,
+    ScrollPhaseMayBegin   = 1 << 5,
+};
+
+_AK_ENUM(UInteger, WindowButton) {
+    WindowCloseButton          = 0,
+    WindowMiniaturizeButton    = 1,
+    WindowZoomButton           = 2,
+    WindowToolbarButton        = 3,
+    WindowDocumentIconButton   = 4,
+    WindowDocumentVersionsButton = 6,
+};
 }

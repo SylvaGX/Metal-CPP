@@ -35,6 +35,8 @@ class Event : public Referencing<Event, Object>
 public:
     static Event* mouseEventWithType(EventType type, Point location, EventModifierFlags flags, TimeInterval timestamp, Integer windowNumber, void* pContext, Integer eventNumber, Integer clickCount, float pressure);
 
+    static Event* keyEventWithType(EventType type, Point location, EventModifierFlags flags, TimeInterval timestamp, Integer windowNumber, void* pContext, String* pCharacters, String* pCharactersIgnoringModifiers, bool isARepeat, Integer keyCode);
+
     EventType type() const;
     Window*   window() const;
     Point     locationInWindow() const;
@@ -42,8 +44,14 @@ public:
     String*   characters() const;
     String*   charactersIgnoringModifiers() const;
     Integer   keyCode() const;
+    Integer   clickCount() const;
+    Integer   buttonNumber() const;
     CGFloat   deltaX() const;
     CGFloat   deltaY() const;
+    CGFloat   scrollingDeltaX() const;
+    CGFloat   scrollingDeltaY() const;
+    bool      hasPreciseScrollingDeltas() const;
+    ScrollPhase phase() const;
     TimeInterval timestamp() const;
     Integer   windowNumber() const;
 };
@@ -52,6 +60,11 @@ public:
 _AK_INLINE NS::Event* NS::Event::mouseEventWithType(EventType type, Point location, EventModifierFlags flags, TimeInterval timestamp, Integer windowNumber, void* pContext, Integer eventNumber, Integer clickCount, float pressure)
 {
     return Object::sendMessage<Event*>(_AK_PRIVATE_CLS(NSEvent), _AK_PRIVATE_SEL(mouseEventWithType_location_modifierFlags_timestamp_windowNumber_context_eventNumber_clickCount_pressure_), type, location, flags, timestamp, windowNumber, pContext, eventNumber, clickCount, pressure);
+}
+
+_AK_INLINE NS::Event* NS::Event::keyEventWithType(EventType type, Point location, EventModifierFlags flags, TimeInterval timestamp, Integer windowNumber, void* pContext, String* pCharacters, String* pCharactersIgnoringModifiers, bool isARepeat, Integer keyCode)
+{
+    return Object::sendMessage<Event*>(_AK_PRIVATE_CLS(NSEvent), _AK_PRIVATE_SEL(keyEventWithType_location_modifierFlags_timestamp_windowNumber_context_characters_charactersIgnoringModifiers_isARepeat_keyCode_), type, location, flags, timestamp, windowNumber, pContext, pCharacters, pCharactersIgnoringModifiers, isARepeat, keyCode);
 }
 
 _AK_INLINE NS::EventType NS::Event::type() const
@@ -89,6 +102,16 @@ _AK_INLINE NS::Integer NS::Event::keyCode() const
     return Object::sendMessage<Integer>(this, _AK_PRIVATE_SEL(keyCode));
 }
 
+_AK_INLINE NS::Integer NS::Event::clickCount() const
+{
+    return Object::sendMessage<Integer>(this, _AK_PRIVATE_SEL(clickCount));
+}
+
+_AK_INLINE NS::Integer NS::Event::buttonNumber() const
+{
+    return Object::sendMessage<Integer>(this, _AK_PRIVATE_SEL(buttonNumber));
+}
+
 _AK_INLINE CGFloat NS::Event::deltaX() const
 {
     return Object::sendMessage<CGFloat>(this, _AK_PRIVATE_SEL(deltaX));
@@ -97,6 +120,26 @@ _AK_INLINE CGFloat NS::Event::deltaX() const
 _AK_INLINE CGFloat NS::Event::deltaY() const
 {
     return Object::sendMessage<CGFloat>(this, _AK_PRIVATE_SEL(deltaY));
+}
+
+_AK_INLINE CGFloat NS::Event::scrollingDeltaX() const
+{
+    return Object::sendMessage<CGFloat>(this, _AK_PRIVATE_SEL(scrollingDeltaX));
+}
+
+_AK_INLINE CGFloat NS::Event::scrollingDeltaY() const
+{
+    return Object::sendMessage<CGFloat>(this, _AK_PRIVATE_SEL(scrollingDeltaY));
+}
+
+_AK_INLINE bool NS::Event::hasPreciseScrollingDeltas() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(hasPreciseScrollingDeltas));
+}
+
+_AK_INLINE NS::ScrollPhase NS::Event::phase() const
+{
+    return Object::sendMessage<ScrollPhase>(this, _AK_PRIVATE_SEL(phase));
 }
 
 _AK_INLINE NS::TimeInterval NS::Event::timestamp() const

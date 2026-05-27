@@ -51,8 +51,16 @@ public:
 
     void mouseDown(Event* pEvent);
     void mouseUp(Event* pEvent);
+    void rightMouseDown(Event* pEvent);
+    void rightMouseUp(Event* pEvent);
+    void otherMouseDown(Event* pEvent);
+    void otherMouseUp(Event* pEvent);
+    void mouseMoved(Event* pEvent);
+    void mouseEntered(Event* pEvent);
+    void mouseExited(Event* pEvent);
     void keyDown(Event* pEvent);
     void keyUp(Event* pEvent);
+    void flagsChanged(Event* pEvent);
     void scrollWheel(Event* pEvent);
 
     bool validateMenuItem(MenuItem* pMenuItem);
@@ -120,6 +128,41 @@ _AK_INLINE void NS::Responder::mouseUp(Event* pEvent)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(mouseUp_), pEvent);
 }
 
+_AK_INLINE void NS::Responder::rightMouseDown(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(rightMouseDown_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::rightMouseUp(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(rightMouseUp_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::otherMouseDown(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(otherMouseDown_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::otherMouseUp(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(otherMouseUp_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::mouseMoved(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(mouseMoved_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::mouseEntered(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(mouseEntered_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::mouseExited(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(mouseExited_), pEvent);
+}
+
 _AK_INLINE void NS::Responder::keyDown(Event* pEvent)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(keyDown_), pEvent);
@@ -128,6 +171,11 @@ _AK_INLINE void NS::Responder::keyDown(Event* pEvent)
 _AK_INLINE void NS::Responder::keyUp(Event* pEvent)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(keyUp_), pEvent);
+}
+
+_AK_INLINE void NS::Responder::flagsChanged(Event* pEvent)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(flagsChanged_), pEvent);
 }
 
 _AK_INLINE void NS::Responder::scrollWheel(Event* pEvent)

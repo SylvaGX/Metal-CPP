@@ -28,11 +28,23 @@ namespace NS
 using AppKitVersion = double;
 
 _AK_EXTERN const AppKitVersion AppKitVersionNumber;
+
+class String;
+
+_AK_EXTERN String* const DefaultRunLoopMode;
+_AK_EXTERN String* const EventTrackingRunLoopMode;
+_AK_EXTERN String* const ModalPanelRunLoopMode;
 }
 
 #if defined(AK_PRIVATE_IMPLEMENTATION)
 
+#include "AKPrivate.hpp"
+
 _AK_EXTERN double const NSAppKitVersionNumber _AK_PRIVATE_IMPORT;
 const NS::AppKitVersion NS::AppKitVersionNumber = (nullptr != &NSAppKitVersionNumber) ? NSAppKitVersionNumber : 0;
+
+_AK_PRIVATE_DEF_STR(NS::String*, DefaultRunLoopMode);
+_AK_PRIVATE_DEF_STR(NS::String*, EventTrackingRunLoopMode);
+_AK_PRIVATE_DEF_STR(NS::String*, ModalPanelRunLoopMode);
 
 #endif

@@ -36,23 +36,35 @@ class String;
 class Window : public Responder
 {
 public:
+    static Window* alloc();
+
     Window* initWithContentRect(Rect contentRect, WindowStyleMask style, BackingStoreType backingStoreType, bool defer);
 
     String* title() const;
     void    setTitle(String* pTitle);
 
+    WindowStyleMask styleMask() const;
+    void            setStyleMask(WindowStyleMask styleMask);
+
     View* contentView() const;
     void  setContentView(View* pView);
 
     void makeKeyAndOrderFront(void* pSender);
+    void orderFront(void* pSender);
+    void orderFrontRegardless();
     void orderOut(void* pSender);
     void close();
+
+    bool isVisible() const;
 
     Rect  frame() const;
     void  setFrame(Rect frame, bool display);
 
     Size  contentSize() const;
     void  setContentSize(Size size);
+
+    Size  contentAspectRatio() const;
+    void  setContentAspectRatio(Size size);
 
     Size  minSize() const;
     void  setMinSize(Size size);
@@ -79,14 +91,46 @@ public:
     void resignKeyWindow();
     void resignMainWindow();
 
+    bool isReleasedWhenClosed() const;
+    void setReleasedWhenClosed(bool releasedWhenClosed);
+
     void* delegate() const;
     void  setDelegate(void* pDelegate);
 
     CGFloat backingScaleFactor() const;
     Screen* screen() const;
 
-    void setCollectionBehavior(WindowCollectionBehavior behavior);
+    WindowCollectionBehavior collectionBehavior() const;
+    void                     setCollectionBehavior(WindowCollectionBehavior behavior);
+
+    bool ignoresMouseEvents() const;
+    void setIgnoresMouseEvents(bool ignoresMouseEvents);
+
+    bool acceptsMouseMovedEvents() const;
+    void setAcceptsMouseMovedEvents(bool acceptsMouseMovedEvents);
+
+    bool isOpaque() const;
+    void setOpaque(bool opaque);
+
+    CGFloat alphaValue() const;
+    void    setAlphaValue(CGFloat alphaValue);
+
+    bool hasShadow() const;
+    void setHasShadow(bool hasShadow);
+
+    bool isMovable() const;
+    void setMovable(bool movable);
+
+    void* standardWindowButton(WindowButton button);
+
+    Rect convertRectToScreen(Rect rect) const;
+    Rect convertRectFromScreen(Rect rect) const;
 };
+}
+
+_AK_INLINE NS::Window* NS::Window::alloc()
+{
+    return Object::alloc<Window>(_AK_PRIVATE_CLS(NSWindow));
 }
 
 _AK_INLINE NS::Window* NS::Window::initWithContentRect(Rect contentRect, WindowStyleMask style, BackingStoreType backingStoreType, bool defer)
@@ -104,6 +148,16 @@ _AK_INLINE void NS::Window::setTitle(String* pTitle)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setTitle_), pTitle);
 }
 
+_AK_INLINE NS::WindowStyleMask NS::Window::styleMask() const
+{
+    return Object::sendMessage<WindowStyleMask>(this, _AK_PRIVATE_SEL(styleMask));
+}
+
+_AK_INLINE void NS::Window::setStyleMask(WindowStyleMask styleMask)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setStyleMask_), styleMask);
+}
+
 _AK_INLINE NS::View* NS::Window::contentView() const
 {
     return Object::sendMessage<View*>(this, _AK_PRIVATE_SEL(contentView));
@@ -119,6 +173,16 @@ _AK_INLINE void NS::Window::makeKeyAndOrderFront(void* pSender)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(makeKeyAndOrderFront_), pSender);
 }
 
+_AK_INLINE void NS::Window::orderFront(void* pSender)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(orderFront_), pSender);
+}
+
+_AK_INLINE void NS::Window::orderFrontRegardless()
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(orderFrontRegardless));
+}
+
 _AK_INLINE void NS::Window::orderOut(void* pSender)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(orderOut_), pSender);
@@ -127,6 +191,11 @@ _AK_INLINE void NS::Window::orderOut(void* pSender)
 _AK_INLINE void NS::Window::close()
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(close));
+}
+
+_AK_INLINE bool NS::Window::isVisible() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(isVisible));
 }
 
 _AK_INLINE NS::Rect NS::Window::frame() const
@@ -147,6 +216,16 @@ _AK_INLINE NS::Size NS::Window::contentSize() const
 _AK_INLINE void NS::Window::setContentSize(Size size)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setContentSize_), size);
+}
+
+_AK_INLINE NS::Size NS::Window::contentAspectRatio() const
+{
+    return Object::sendMessage<Size>(this, _AK_PRIVATE_SEL(contentAspectRatio));
+}
+
+_AK_INLINE void NS::Window::setContentAspectRatio(Size size)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setContentAspectRatio_), size);
 }
 
 _AK_INLINE NS::Size NS::Window::minSize() const
@@ -239,6 +318,16 @@ _AK_INLINE void NS::Window::resignMainWindow()
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(resignMainWindow));
 }
 
+_AK_INLINE bool NS::Window::isReleasedWhenClosed() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(isReleasedWhenClosed));
+}
+
+_AK_INLINE void NS::Window::setReleasedWhenClosed(bool releasedWhenClosed)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setReleasedWhenClosed_), releasedWhenClosed);
+}
+
 _AK_INLINE void* NS::Window::delegate() const
 {
     return Object::sendMessage<void*>(this, _AK_PRIVATE_SEL(delegate));
@@ -259,7 +348,87 @@ _AK_INLINE NS::Screen* NS::Window::screen() const
     return Object::sendMessage<Screen*>(this, _AK_PRIVATE_SEL(screen));
 }
 
+_AK_INLINE NS::WindowCollectionBehavior NS::Window::collectionBehavior() const
+{
+    return Object::sendMessage<WindowCollectionBehavior>(this, _AK_PRIVATE_SEL(collectionBehavior));
+}
+
 _AK_INLINE void NS::Window::setCollectionBehavior(WindowCollectionBehavior behavior)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setCollectionBehavior_), behavior);
+}
+
+_AK_INLINE bool NS::Window::ignoresMouseEvents() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(ignoresMouseEvents));
+}
+
+_AK_INLINE void NS::Window::setIgnoresMouseEvents(bool ignoresMouseEvents)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setIgnoresMouseEvents_), ignoresMouseEvents);
+}
+
+_AK_INLINE bool NS::Window::acceptsMouseMovedEvents() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(acceptsMouseMovedEvents));
+}
+
+_AK_INLINE void NS::Window::setAcceptsMouseMovedEvents(bool acceptsMouseMovedEvents)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setAcceptsMouseMovedEvents_), acceptsMouseMovedEvents);
+}
+
+_AK_INLINE bool NS::Window::isOpaque() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(isOpaque));
+}
+
+_AK_INLINE void NS::Window::setOpaque(bool opaque)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setOpaque_), opaque);
+}
+
+_AK_INLINE CGFloat NS::Window::alphaValue() const
+{
+    return Object::sendMessage<CGFloat>(this, _AK_PRIVATE_SEL(alphaValue));
+}
+
+_AK_INLINE void NS::Window::setAlphaValue(CGFloat alphaValue)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setAlphaValue_), alphaValue);
+}
+
+_AK_INLINE bool NS::Window::hasShadow() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(hasShadow));
+}
+
+_AK_INLINE void NS::Window::setHasShadow(bool hasShadow)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setHasShadow_), hasShadow);
+}
+
+_AK_INLINE bool NS::Window::isMovable() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(isMovable));
+}
+
+_AK_INLINE void NS::Window::setMovable(bool movable)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setMovable_), movable);
+}
+
+_AK_INLINE void* NS::Window::standardWindowButton(WindowButton button)
+{
+    return Object::sendMessage<void*>(this, _AK_PRIVATE_SEL(standardWindowButton_), button);
+}
+
+_AK_INLINE NS::Rect NS::Window::convertRectToScreen(Rect rect) const
+{
+    return Object::sendMessage<Rect>(this, _AK_PRIVATE_SEL(convertRectToScreen_), rect);
+}
+
+_AK_INLINE NS::Rect NS::Window::convertRectFromScreen(Rect rect) const
+{
+    return Object::sendMessage<Rect>(this, _AK_PRIVATE_SEL(convertRectFromScreen_), rect);
 }

@@ -45,6 +45,7 @@ public:
 
     void run();
     void terminate(void* pSender);
+    void activate();
     void activateIgnoringOtherApps(bool flag);
 
     ApplicationActivationPolicy activationPolicy() const;
@@ -59,6 +60,9 @@ public:
     Window* mainWindow() const;
     Window* keyWindow() const;
 
+    void* delegate() const;
+    void  setDelegate(void* pDelegate);
+
     Menu* mainMenu() const;
     void  setMainMenu(Menu* pMenu);
 
@@ -68,17 +72,24 @@ public:
     Menu* helpMenu() const;
     void  setHelpMenu(Menu* pMenu);
 
-    UInteger presentationOptions() const;
-    void     setPresentationOptions(UInteger options);
+    ApplicationPresentationOptions presentationOptions() const;
+    void                           setPresentationOptions(ApplicationPresentationOptions options);
 
     Event* nextEventMatchingMask(EventMask mask, Date* pExpiration, String* pMode, bool dequeue);
+    Event* currentEvent() const;
     void   sendEvent(Event* pEvent);
     void   postEvent(Event* pEvent, bool atStart);
+    bool   sendAction(SEL action, void* pTarget, void* pSender);
 
     bool isRunning() const;
+    bool isActive() const;
+    bool isHidden() const;
+
     void hide(void* pSender);
     void unhide(void* pSender);
     void unhideWithoutActivation();
+    void hideOtherApplications(void* pSender);
+    void unhideAllApplications(void* pSender);
 };
 }
 
@@ -100,6 +111,11 @@ _AK_INLINE void NS::Application::run()
 _AK_INLINE void NS::Application::terminate(void* pSender)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(terminate_), pSender);
+}
+
+_AK_INLINE void NS::Application::activate()
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(activate));
 }
 
 _AK_INLINE void NS::Application::activateIgnoringOtherApps(bool flag)
@@ -152,6 +168,16 @@ _AK_INLINE NS::Window* NS::Application::keyWindow() const
     return Object::sendMessage<Window*>(this, _AK_PRIVATE_SEL(keyWindow));
 }
 
+_AK_INLINE void* NS::Application::delegate() const
+{
+    return Object::sendMessage<void*>(this, _AK_PRIVATE_SEL(delegate));
+}
+
+_AK_INLINE void NS::Application::setDelegate(void* pDelegate)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setDelegate_), pDelegate);
+}
+
 _AK_INLINE NS::Menu* NS::Application::mainMenu() const
 {
     return Object::sendMessage<Menu*>(this, _AK_PRIVATE_SEL(mainMenu));
@@ -182,12 +208,12 @@ _AK_INLINE void NS::Application::setHelpMenu(Menu* pMenu)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setHelpMenu_), pMenu);
 }
 
-_AK_INLINE NS::UInteger NS::Application::presentationOptions() const
+_AK_INLINE NS::ApplicationPresentationOptions NS::Application::presentationOptions() const
 {
-    return Object::sendMessage<UInteger>(this, _AK_PRIVATE_SEL(presentationOptions));
+    return Object::sendMessage<ApplicationPresentationOptions>(this, _AK_PRIVATE_SEL(presentationOptions));
 }
 
-_AK_INLINE void NS::Application::setPresentationOptions(UInteger options)
+_AK_INLINE void NS::Application::setPresentationOptions(ApplicationPresentationOptions options)
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(setPresentationOptions_), options);
 }
@@ -195,6 +221,11 @@ _AK_INLINE void NS::Application::setPresentationOptions(UInteger options)
 _AK_INLINE NS::Event* NS::Application::nextEventMatchingMask(EventMask mask, Date* pExpiration, String* pMode, bool dequeue)
 {
     return Object::sendMessage<Event*>(this, _AK_PRIVATE_SEL(nextEventMatchingMask_untilDate_inMode_dequeue_), mask, pExpiration, pMode, dequeue);
+}
+
+_AK_INLINE NS::Event* NS::Application::currentEvent() const
+{
+    return Object::sendMessage<Event*>(this, _AK_PRIVATE_SEL(currentEvent));
 }
 
 _AK_INLINE void NS::Application::sendEvent(Event* pEvent)
@@ -207,9 +238,24 @@ _AK_INLINE void NS::Application::postEvent(Event* pEvent, bool atStart)
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(postEvent_atStart_), pEvent, atStart);
 }
 
+_AK_INLINE bool NS::Application::sendAction(SEL action, void* pTarget, void* pSender)
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(sendAction_to_from_), action, pTarget, pSender);
+}
+
 _AK_INLINE bool NS::Application::isRunning() const
 {
     return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(isRunning));
+}
+
+_AK_INLINE bool NS::Application::isActive() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(active));
+}
+
+_AK_INLINE bool NS::Application::isHidden() const
+{
+    return Object::sendMessage<bool>(this, _AK_PRIVATE_SEL(hidden));
 }
 
 _AK_INLINE void NS::Application::hide(void* pSender)
@@ -225,4 +271,14 @@ _AK_INLINE void NS::Application::unhide(void* pSender)
 _AK_INLINE void NS::Application::unhideWithoutActivation()
 {
     Object::sendMessage<void>(this, _AK_PRIVATE_SEL(unhideWithoutActivation));
+}
+
+_AK_INLINE void NS::Application::hideOtherApplications(void* pSender)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(hideOtherApplications_), pSender);
+}
+
+_AK_INLINE void NS::Application::unhideAllApplications(void* pSender)
+{
+    Object::sendMessage<void>(this, _AK_PRIVATE_SEL(unhideAllApplications_), pSender);
 }

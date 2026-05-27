@@ -333,6 +333,7 @@ The following documentation describes changes made by SylvaGX to this repository
 
 | Version | Date | Changes                                                                                                                                                                                   |
 |-|-|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1.2.0 | 2026 | Expand AppKit bindings: full Application, Window, View, Menu, MenuItem, Event, and Responder coverage (`alloc()`, delegates, presentation options, `setLayer`, `ignoresMouseEvents`, run-loop mode constants, scroll/key event APIs). |
 | 1.1.2 | 2026 | Add ModelIO C++ bindings (`MDL::Asset`, `MDL::Mesh`, `MDL::Texture`, `MDL::VertexDescriptor`, enums). MetalKit no longer includes native `<ModelIO/ModelIO.h>`. |
 | 1.1.1 | 2026 | Add `MTK::View::alloc()` for creating `MTKView` instances. |
 | 1.1.0 | 2026 | Add MetalKit C++ bindings (`MTKView`, `MTKTextureLoader`, mesh APIs). Make QuartzCore a required dependency in CMake (remove `METALCPP_ENABLE_QUARTZCORE` option). |
@@ -341,15 +342,25 @@ The following documentation describes changes made by SylvaGX to this repository
 
 ### Roadmap
 
-| Next | Description |
-|-|-|
-| **IOKit** | C++ bindings for IOKit — hardware and device interfaces (HID, power, USB, and related low-level macOS APIs), following the same metal-cpp patterns as AppKit. |
+| Priority | Next | Description |
+|-|-|-|
+| P0 | **AppKit delegates (C++)** | Optional `ApplicationDelegate` / `WindowDelegate` / `MenuDelegate` C++ base classes with virtual callbacks for pure C++ apps. |
+| P1 | **AppKit color & appearance** | `NSColor`, `NSAppearance`, effective appearance APIs. |
+| P1 | **AppKit controls** | `NSButton`, `NSTextField`, `NSScrollView`, `NSStackView`, `NSGridView`. |
+| P2 | **AppKit dialogs** | `NSOpenPanel`, `NSSavePanel`, `NSAlert`. |
+| P2 | **AppKit system integration** | `NSWorkspace`, `NSRunningApplication`, `NSStatusBar` / `NSStatusItem`. |
+| P2 | **AppKit input** | `NSCursor`, gesture recognizers. |
+| P3 | **AppKit pasteboard & drag-drop** | `NSPasteboard`, dragging APIs. |
+| P3 | **AppKit layout** | `NSLayoutConstraint`, layout anchors. |
+| P4 | **IOKit** | C++ bindings for IOKit — hardware and device interfaces (HID, power, USB), following the same metal-cpp patterns as AppKit. |
 
 ### AppKit C++ Bindings (macOS)
 
 AppKit C++ bindings extend **metal-cpp** with a header-only C++ interface to macOS AppKit for application lifecycle, window management, event handling, and menus. AppKit classes map to the `NS::` namespace (for example, `NSView` → `NS::View`).
 
 **Platform:** macOS only.
+
+**v1.2.0 coverage:** `NS::Application`, `NS::Window`, `NS::Panel`, `NS::WindowController`, `NS::View`, `NS::Screen`, `NS::Menu`, `NS::MenuItem`, `NS::Event`, and `NS::Responder` with `alloc()`, typed enums/constants, and run-loop mode strings (`NS::DefaultRunLoopMode`, etc.). Option-set values live in the `NS::` namespace (for example `NS::ViewWidthSizable`, not `NS::AutoresizingMaskOptions::ViewWidthSizable`).
 
 #### Adding AppKit to a Project
 
