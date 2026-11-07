@@ -27,6 +27,12 @@
 
 namespace MTL
 {
+
+_MTL_ENUM(NS::Integer, ContentionRelief) {
+    ContentionReliefAutomatic = 0,
+    ContentionReliefNone = 1,
+};
+
 struct SamplePosition;
 
 using Coordinate2D = MTL::SamplePosition;

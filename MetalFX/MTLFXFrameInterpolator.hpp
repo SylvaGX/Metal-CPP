@@ -28,6 +28,8 @@
 
 #include "../Metal/Metal.hpp"
 
+#include <simd/simd.h>
+
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 namespace MTL4FX
@@ -75,6 +77,9 @@ namespace MTLFX
         NS::UInteger                        outputHeight() const;
         void                                setOutputHeight( NS::UInteger outputHeight );
 
+        NS::UInteger                        isDistortionTextureEnabled() const;
+        void                                setDistortionTextureEnabled( bool enabled );
+
         class FrameInterpolator*            newFrameInterpolator( const MTL::Device* pDevice) const;
         MTL4FX::FrameInterpolator*          newFrameInterpolator( const MTL::Device* pDevice, const MTL4::Compiler* pCompiler) const;
 
@@ -102,8 +107,43 @@ namespace MTLFX
         NS::UInteger      outputHeight() const;
         MTL::PixelFormat  uiTextureFormat() const;
 
+        NS::UInteger      contentWidth() const;
+        void              setContentWidth( NS::UInteger contentWidth );
+        NS::UInteger      contentHeight() const;
+        void              setContentHeight( NS::UInteger contentHeight );
+
+        NS::UInteger      depthContentOffsetX() const;
+        void              setDepthContentOffsetX( NS::UInteger offset );
+        NS::UInteger      depthContentOffsetY() const;
+        void              setDepthContentOffsetY( NS::UInteger offset );
+
+        NS::UInteger      motionContentOffsetX() const;
+        void              setMotionContentOffsetX( NS::UInteger offset );
+        NS::UInteger      motionContentOffsetY() const;
+        void              setMotionContentOffsetY( NS::UInteger offset );
+
+        NS::UInteger      outputOffsetX() const;
+        void              setOutputOffsetX( NS::UInteger offset );
+        NS::UInteger      outputOffsetY() const;
+        void              setOutputOffsetY( NS::UInteger offset );
+
+        NS::UInteger      distortionOffsetX() const;
+        void              setDistortionOffsetX( NS::UInteger offset );
+
+        NS::UInteger      distortionOffsetY() const;
+        void              setDistortionOffsetY( NS::UInteger offset );
+
+        NS::UInteger      distortionWidth() const;
+        void              setDistortionWidth( NS::UInteger width );
+
+        NS::UInteger      distortionHeight() const;
+        void              setDistortionHeight( NS::UInteger height );
+
         MTL::Texture*     colorTexture() const;
         void              setColorTexture(MTL::Texture* colorTexture);
+
+        MTL::Texture*     distortionTexture() const;
+        void              setDistortionTexture(MTL::Texture* distortionTexture);
 
         MTL::Texture*     prevColorTexture() const;
         void              setPrevColorTexture(MTL::Texture* prevColorTexture);
@@ -134,6 +174,12 @@ namespace MTLFX
 
         float             aspectRatio() const;
         void              setAspectRatio( float aspectRatio );
+
+        simd::float4x4    worldToViewMatrix() const;
+        void              setWorldToViewMatrix( simd::float4x4 worldToViewMatrix );
+
+        simd::float4x4    viewToClipMatrix() const;
+        void              setViewToClipMatrix( simd::float4x4 viewToClipMatrix );
 
         MTL::Texture*     uiTexture() const;
         void              setUITexture(MTL::Texture* uiTexture);
@@ -322,6 +368,20 @@ _MTLFX_INLINE void MTLFX::FrameInterpolatorDescriptor::setOutputHeight( NS::UInt
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorDescriptor::isDistortionTextureEnabled() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( isDistortionTextureEnabled ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorDescriptor::setDistortionTextureEnabled( bool enabled )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDistortionTextureEnabled_ ), enabled );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 _MTLFX_INLINE MTLFX::FrameInterpolator* MTLFX::FrameInterpolatorDescriptor::newFrameInterpolator( const MTL::Device* device ) const
 {
     return NS::Object::sendMessage< MTLFX::FrameInterpolator* >( this, _MTLFX_PRIVATE_SEL( newFrameInterpolatorWithDevice_ ), device );
@@ -449,6 +509,174 @@ _MTLFX_INLINE MTL::PixelFormat MTLFX::FrameInterpolatorBase::uiTextureFormat() c
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::contentWidth() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( contentWidth ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setContentWidth( NS::UInteger contentWidth )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setContentWidth_ ), contentWidth );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::contentHeight() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( contentHeight ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setContentHeight( NS::UInteger contentHeight )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setContentHeight_ ), contentHeight );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::depthContentOffsetX() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( depthContentOffsetX ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDepthContentOffsetX( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDepthContentOffsetX_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::depthContentOffsetY() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( depthContentOffsetY ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDepthContentOffsetY( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDepthContentOffsetY_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::motionContentOffsetX() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( motionContentOffsetX ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setMotionContentOffsetX( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setMotionContentOffsetX_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::motionContentOffsetY() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( motionContentOffsetY ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setMotionContentOffsetY( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setMotionContentOffsetY_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::outputOffsetX() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( outputOffsetX ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setOutputOffsetX( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setOutputOffsetX_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::outputOffsetY() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( outputOffsetY ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setOutputOffsetY( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setOutputOffsetY_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::distortionOffsetX() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( distortionOffsetX ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDistortionOffsetX( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDistortionOffsetX_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::distortionOffsetY() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( distortionOffsetY ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDistortionOffsetY( NS::UInteger offset )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDistortionOffsetY_ ), offset );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::distortionWidth() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( distortionWidth ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDistortionWidth( NS::UInteger width )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDistortionWidth_ ), width );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE NS::UInteger MTLFX::FrameInterpolatorBase::distortionHeight() const
+{
+    return NS::Object::sendMessage< NS::UInteger >( this, _MTLFX_PRIVATE_SEL( distortionHeight ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDistortionHeight( NS::UInteger height )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDistortionHeight_ ), height );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 _MTLFX_INLINE MTL::Texture* MTLFX::FrameInterpolatorBase::colorTexture() const
 {
     return NS::Object::sendMessage< MTL::Texture* >( this, _MTLFX_PRIVATE_SEL( colorTexture ) );
@@ -459,6 +687,20 @@ _MTLFX_INLINE MTL::Texture* MTLFX::FrameInterpolatorBase::colorTexture() const
 _MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setColorTexture(MTL::Texture* colorTexture)
 {
     return NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setColorTexture_ ), colorTexture );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE MTL::Texture* MTLFX::FrameInterpolatorBase::distortionTexture() const
+{
+    return NS::Object::sendMessage< MTL::Texture* >( this, _MTLFX_PRIVATE_SEL( distortionTexture ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setDistortionTexture( MTL::Texture* distortionTexture )
+{
+    NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setDistortionTexture_ ), distortionTexture );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -599,6 +841,34 @@ _MTLFX_INLINE float  MTLFX::FrameInterpolatorBase::aspectRatio() const
 _MTLFX_INLINE void   MTLFX::FrameInterpolatorBase::setAspectRatio( float aspectRatio )
 {
     NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setAspectRatio_ ), aspectRatio );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE simd::float4x4 MTLFX::FrameInterpolatorBase::worldToViewMatrix() const
+{
+    return NS::Object::sendMessage< simd::float4x4 >( this, _MTLFX_PRIVATE_SEL( worldToViewMatrix ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setWorldToViewMatrix( simd::float4x4 worldToViewMatrix )
+{
+    return NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setWorldToViewMatrix_ ), worldToViewMatrix );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE simd::float4x4 MTLFX::FrameInterpolatorBase::viewToClipMatrix() const
+{
+    return NS::Object::sendMessage< simd::float4x4 >( this, _MTLFX_PRIVATE_SEL( viewToClipMatrix ) );
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_MTLFX_INLINE void MTLFX::FrameInterpolatorBase::setViewToClipMatrix( simd::float4x4 viewToClipMatrix )
+{
+    return NS::Object::sendMessage< void >( this, _MTLFX_PRIVATE_SEL( setViewToClipMatrix_ ), viewToClipMatrix );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------

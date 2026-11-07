@@ -74,6 +74,10 @@ public:
 
     Function*                         computeFunction() const;
 
+    ContentionRelief                  contentionRelief() const;
+
+    ForwardProgressUsage              forwardProgressUsage() const;
+
     ComputePipelineDescriptor*        init();
 
     NS::Array*                        insertLibraries() const;
@@ -86,6 +90,8 @@ public:
 
     NS::UInteger                      maxTotalThreadsPerThreadgroup() const;
 
+    bool                              optimizeForPersistentKernel() const;
+
     NS::Array*                        preloadedLibraries() const;
 
     Size                              requiredThreadsPerThreadgroup() const;
@@ -96,6 +102,10 @@ public:
 
     void                              setComputeFunction(const MTL::Function* computeFunction);
 
+    void                              setContentionRelief(MTL::ContentionRelief contentionRelief);
+
+    void                              setForwardProgressUsage(MTL::ForwardProgressUsage forwardProgressUsage);
+
     void                              setInsertLibraries(const NS::Array* insertLibraries);
 
     void                              setLabel(const NS::String* label);
@@ -105,6 +115,8 @@ public:
     void                              setMaxCallStackDepth(NS::UInteger maxCallStackDepth);
 
     void                              setMaxTotalThreadsPerThreadgroup(NS::UInteger maxTotalThreadsPerThreadgroup);
+
+    void                              setOptimizeForPersistentKernel(bool optimizeForPersistentKernel);
 
     void                              setPreloadedLibraries(const NS::Array* preloadedLibraries);
 
@@ -135,6 +147,8 @@ class ComputePipelineState : public NS::Referencing<ComputePipelineState, Alloca
 public:
     Device*                    device() const;
 
+    ForwardProgressUsage       forwardProgressUsage() const;
+
     FunctionHandle*            functionHandle(const NS::String* name);
     FunctionHandle*            functionHandle(const MTL4::BinaryFunction* function);
     FunctionHandle*            functionHandle(const MTL::Function* function);
@@ -153,6 +167,8 @@ public:
     IntersectionFunctionTable* newIntersectionFunctionTable(const MTL::IntersectionFunctionTableDescriptor* descriptor);
 
     VisibleFunctionTable*      newVisibleFunctionTable(const MTL::VisibleFunctionTableDescriptor* descriptor);
+
+    NS::UInteger               recommendedPersistentThreadgroupsPerGrid(MTL::Size threadsPerThreadgroup);
 
     ComputePipelineReflection* reflection() const;
 
@@ -208,6 +224,16 @@ _MTL_INLINE MTL::Function* MTL::ComputePipelineDescriptor::computeFunction() con
     return Object::sendMessage<MTL::Function*>(this, _MTL_PRIVATE_SEL(computeFunction));
 }
 
+_MTL_INLINE MTL::ContentionRelief MTL::ComputePipelineDescriptor::contentionRelief() const
+{
+    return Object::sendMessage<MTL::ContentionRelief>(this, _MTL_PRIVATE_SEL(contentionRelief));
+}
+
+_MTL_INLINE MTL::ForwardProgressUsage MTL::ComputePipelineDescriptor::forwardProgressUsage() const
+{
+    return Object::sendMessage<MTL::ForwardProgressUsage>(this, _MTL_PRIVATE_SEL(forwardProgressUsage));
+}
+
 _MTL_INLINE MTL::ComputePipelineDescriptor* MTL::ComputePipelineDescriptor::init()
 {
     return NS::Object::init<MTL::ComputePipelineDescriptor>();
@@ -238,6 +264,11 @@ _MTL_INLINE NS::UInteger MTL::ComputePipelineDescriptor::maxTotalThreadsPerThrea
     return Object::sendMessage<NS::UInteger>(this, _MTL_PRIVATE_SEL(maxTotalThreadsPerThreadgroup));
 }
 
+_MTL_INLINE bool MTL::ComputePipelineDescriptor::optimizeForPersistentKernel() const
+{
+    return Object::sendMessage<bool>(this, _MTL_PRIVATE_SEL(optimizeForPersistentKernel));
+}
+
 _MTL_INLINE NS::Array* MTL::ComputePipelineDescriptor::preloadedLibraries() const
 {
     return Object::sendMessage<NS::Array*>(this, _MTL_PRIVATE_SEL(preloadedLibraries));
@@ -263,6 +294,16 @@ _MTL_INLINE void MTL::ComputePipelineDescriptor::setComputeFunction(const MTL::F
     Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setComputeFunction_), computeFunction);
 }
 
+_MTL_INLINE void MTL::ComputePipelineDescriptor::setContentionRelief(MTL::ContentionRelief contentionRelief)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setContentionRelief_), contentionRelief);
+}
+
+_MTL_INLINE void MTL::ComputePipelineDescriptor::setForwardProgressUsage(MTL::ForwardProgressUsage forwardProgressUsage)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setForwardProgressUsage_), forwardProgressUsage);
+}
+
 _MTL_INLINE void MTL::ComputePipelineDescriptor::setInsertLibraries(const NS::Array* insertLibraries)
 {
     Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setInsertLibraries_), insertLibraries);
@@ -286,6 +327,11 @@ _MTL_INLINE void MTL::ComputePipelineDescriptor::setMaxCallStackDepth(NS::UInteg
 _MTL_INLINE void MTL::ComputePipelineDescriptor::setMaxTotalThreadsPerThreadgroup(NS::UInteger maxTotalThreadsPerThreadgroup)
 {
     Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setMaxTotalThreadsPerThreadgroup_), maxTotalThreadsPerThreadgroup);
+}
+
+_MTL_INLINE void MTL::ComputePipelineDescriptor::setOptimizeForPersistentKernel(bool optimizeForPersistentKernel)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setOptimizeForPersistentKernel_), optimizeForPersistentKernel);
 }
 
 _MTL_INLINE void MTL::ComputePipelineDescriptor::setPreloadedLibraries(const NS::Array* preloadedLibraries)
@@ -353,6 +399,11 @@ _MTL_INLINE MTL::Device* MTL::ComputePipelineState::device() const
     return Object::sendMessage<MTL::Device*>(this, _MTL_PRIVATE_SEL(device));
 }
 
+_MTL_INLINE MTL::ForwardProgressUsage MTL::ComputePipelineState::forwardProgressUsage() const
+{
+    return Object::sendMessage<MTL::ForwardProgressUsage>(this, _MTL_PRIVATE_SEL(forwardProgressUsage));
+}
+
 _MTL_INLINE MTL::FunctionHandle* MTL::ComputePipelineState::functionHandle(const NS::String* name)
 {
     return Object::sendMessage<MTL::FunctionHandle*>(this, _MTL_PRIVATE_SEL(functionHandleWithName_), name);
@@ -406,6 +457,11 @@ _MTL_INLINE MTL::IntersectionFunctionTable* MTL::ComputePipelineState::newInters
 _MTL_INLINE MTL::VisibleFunctionTable* MTL::ComputePipelineState::newVisibleFunctionTable(const MTL::VisibleFunctionTableDescriptor* descriptor)
 {
     return Object::sendMessage<MTL::VisibleFunctionTable*>(this, _MTL_PRIVATE_SEL(newVisibleFunctionTableWithDescriptor_), descriptor);
+}
+
+_MTL_INLINE NS::UInteger MTL::ComputePipelineState::recommendedPersistentThreadgroupsPerGrid(MTL::Size threadsPerThreadgroup)
+{
+    return Object::sendMessage<NS::UInteger>(this, _MTL_PRIVATE_SEL(recommendedPersistentThreadgroupsPerGridForThreadsPerThreadgroup_), threadsPerThreadgroup);
 }
 
 _MTL_INLINE MTL::ComputePipelineReflection* MTL::ComputePipelineState::reflection() const

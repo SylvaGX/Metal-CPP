@@ -196,9 +196,13 @@ public:
 
     NS::Range                     levelRange() const;
 
+    float                         minLOD() const;
+
     PixelFormat                   pixelFormat() const;
 
     void                          setLevelRange(NS::Range levelRange);
+
+    void                          setMinLOD(float minLOD);
 
     void                          setPixelFormat(MTL::PixelFormat pixelFormat);
 
@@ -250,6 +254,8 @@ public:
     bool                 isShareable() const;
 
     bool                 isSparse() const;
+
+    float                minLOD() const;
 
     NS::UInteger         mipmapLevelCount() const;
 
@@ -552,6 +558,11 @@ _MTL_INLINE NS::Range MTL::TextureViewDescriptor::levelRange() const
     return Object::sendMessage<NS::Range>(this, _MTL_PRIVATE_SEL(levelRange));
 }
 
+_MTL_INLINE float MTL::TextureViewDescriptor::minLOD() const
+{
+    return Object::sendMessage<float>(this, _MTL_PRIVATE_SEL(minLOD));
+}
+
 _MTL_INLINE MTL::PixelFormat MTL::TextureViewDescriptor::pixelFormat() const
 {
     return Object::sendMessage<MTL::PixelFormat>(this, _MTL_PRIVATE_SEL(pixelFormat));
@@ -560,6 +571,11 @@ _MTL_INLINE MTL::PixelFormat MTL::TextureViewDescriptor::pixelFormat() const
 _MTL_INLINE void MTL::TextureViewDescriptor::setLevelRange(NS::Range levelRange)
 {
     Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setLevelRange_), levelRange);
+}
+
+_MTL_INLINE void MTL::TextureViewDescriptor::setMinLOD(float minLOD)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setMinLOD_), minLOD);
 }
 
 _MTL_INLINE void MTL::TextureViewDescriptor::setPixelFormat(MTL::PixelFormat pixelFormat)
@@ -685,6 +701,11 @@ _MTL_INLINE bool MTL::Texture::isShareable() const
 _MTL_INLINE bool MTL::Texture::isSparse() const
 {
     return Object::sendMessage<bool>(this, _MTL_PRIVATE_SEL(isSparse));
+}
+
+_MTL_INLINE float MTL::Texture::minLOD() const
+{
+    return Object::sendMessage<float>(this, _MTL_PRIVATE_SEL(minLOD));
 }
 
 _MTL_INLINE NS::UInteger MTL::Texture::mipmapLevelCount() const
