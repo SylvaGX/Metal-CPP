@@ -40,9 +40,15 @@ public:
 
     FunctionDescriptor*               computeFunctionDescriptor() const;
 
+    MTL::ContentionRelief             contentionRelief() const;
+
+    MTL::ForwardProgressUsage         forwardProgressUsage() const;
+
     ComputePipelineDescriptor*        init();
 
     NS::UInteger                      maxTotalThreadsPerThreadgroup() const;
+
+    bool                              optimizeForPersistentKernel() const;
 
     MTL::Size                         requiredThreadsPerThreadgroup() const;
 
@@ -50,7 +56,13 @@ public:
 
     void                              setComputeFunctionDescriptor(const MTL4::FunctionDescriptor* computeFunctionDescriptor);
 
+    void                              setContentionRelief(MTL::ContentionRelief contentionRelief);
+
+    void                              setForwardProgressUsage(MTL::ForwardProgressUsage forwardProgressUsage);
+
     void                              setMaxTotalThreadsPerThreadgroup(NS::UInteger maxTotalThreadsPerThreadgroup);
+
+    void                              setOptimizeForPersistentKernel(bool optimizeForPersistentKernel);
 
     void                              setRequiredThreadsPerThreadgroup(MTL::Size requiredThreadsPerThreadgroup);
 
@@ -82,6 +94,16 @@ _MTL_INLINE MTL4::FunctionDescriptor* MTL4::ComputePipelineDescriptor::computeFu
     return Object::sendMessage<MTL4::FunctionDescriptor*>(this, _MTL_PRIVATE_SEL(computeFunctionDescriptor));
 }
 
+_MTL_INLINE MTL::ContentionRelief MTL4::ComputePipelineDescriptor::contentionRelief() const
+{
+    return Object::sendMessage<MTL::ContentionRelief>(this, _MTL_PRIVATE_SEL(contentionRelief));
+}
+
+_MTL_INLINE MTL::ForwardProgressUsage MTL4::ComputePipelineDescriptor::forwardProgressUsage() const
+{
+    return Object::sendMessage<MTL::ForwardProgressUsage>(this, _MTL_PRIVATE_SEL(forwardProgressUsage));
+}
+
 _MTL_INLINE MTL4::ComputePipelineDescriptor* MTL4::ComputePipelineDescriptor::init()
 {
     return NS::Object::init<MTL4::ComputePipelineDescriptor>();
@@ -90,6 +112,11 @@ _MTL_INLINE MTL4::ComputePipelineDescriptor* MTL4::ComputePipelineDescriptor::in
 _MTL_INLINE NS::UInteger MTL4::ComputePipelineDescriptor::maxTotalThreadsPerThreadgroup() const
 {
     return Object::sendMessage<NS::UInteger>(this, _MTL_PRIVATE_SEL(maxTotalThreadsPerThreadgroup));
+}
+
+_MTL_INLINE bool MTL4::ComputePipelineDescriptor::optimizeForPersistentKernel() const
+{
+    return Object::sendMessage<bool>(this, _MTL_PRIVATE_SEL(optimizeForPersistentKernel));
 }
 
 _MTL_INLINE MTL::Size MTL4::ComputePipelineDescriptor::requiredThreadsPerThreadgroup() const
@@ -107,9 +134,24 @@ _MTL_INLINE void MTL4::ComputePipelineDescriptor::setComputeFunctionDescriptor(c
     Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setComputeFunctionDescriptor_), computeFunctionDescriptor);
 }
 
+_MTL_INLINE void MTL4::ComputePipelineDescriptor::setContentionRelief(MTL::ContentionRelief contentionRelief)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setContentionRelief_), contentionRelief);
+}
+
+_MTL_INLINE void MTL4::ComputePipelineDescriptor::setForwardProgressUsage(MTL::ForwardProgressUsage forwardProgressUsage)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setForwardProgressUsage_), forwardProgressUsage);
+}
+
 _MTL_INLINE void MTL4::ComputePipelineDescriptor::setMaxTotalThreadsPerThreadgroup(NS::UInteger maxTotalThreadsPerThreadgroup)
 {
     Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setMaxTotalThreadsPerThreadgroup_), maxTotalThreadsPerThreadgroup);
+}
+
+_MTL_INLINE void MTL4::ComputePipelineDescriptor::setOptimizeForPersistentKernel(bool optimizeForPersistentKernel)
+{
+    Object::sendMessage<void>(this, _MTL_PRIVATE_SEL(setOptimizeForPersistentKernel_), optimizeForPersistentKernel);
 }
 
 _MTL_INLINE void MTL4::ComputePipelineDescriptor::setRequiredThreadsPerThreadgroup(MTL::Size requiredThreadsPerThreadgroup)

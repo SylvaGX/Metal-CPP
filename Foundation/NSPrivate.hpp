@@ -510,6 +510,8 @@ namespace Private
             "unsignedShortValue");
         _NS_PRIVATE_DEF_SEL(URLForAuxiliaryExecutable_,
             "URLForAuxiliaryExecutable:");
+        _NS_PRIVATE_DEF_SEL(URLForResource_withExtension_,
+            "URLForResource:withExtension:");
         _NS_PRIVATE_DEF_SEL(userInfo,
             "userInfo");
         _NS_PRIVATE_DEF_SEL(userName,

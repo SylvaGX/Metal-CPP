@@ -67,6 +67,7 @@ public:
     class URL*          resourceURL() const;
     class URL*          executableURL() const;
     class URL*          URLForAuxiliaryExecutable(const class String* pExecutableName) const;
+    class URL*          URLForResource(const class String* name, const class String* extension) const;
 
     class URL*          privateFrameworksURL() const;
     class URL*          sharedFrameworksURL() const;
@@ -244,6 +245,14 @@ _NS_INLINE NS::URL* NS::Bundle::URLForAuxiliaryExecutable(const String* pExecuta
 {
     return Object::sendMessage<URL*>(this, _NS_PRIVATE_SEL(URLForAuxiliaryExecutable_), pExecutableName);
 }
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+_NS_INLINE NS::URL* NS::Bundle::URLForResource(const class String* name, const class String* extension) const
+{
+    return Object::sendMessage<URL*>(this, _NS_PRIVATE_SEL(URLForResource_withExtension_), name, extension);
+}
+
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 

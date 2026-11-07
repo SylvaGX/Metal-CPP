@@ -41,6 +41,12 @@ _MTL_ENUM(NS::Integer, ShaderValidation) {
     ShaderValidationDisabled = 2,
 };
 
+_MTL_ENUM(NS::Integer, ForwardProgressUsage) {
+    ForwardProgressUsageAutomatic = 0,
+    ForwardProgressUsageWeak = 1,
+    ForwardProgressUsageSIMDGroupParallel = 2,
+};
+
 class PipelineBufferDescriptor : public NS::Copying<PipelineBufferDescriptor>
 {
 public:

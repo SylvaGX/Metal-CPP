@@ -143,11 +143,11 @@ _NS_INLINE _Class* NS::Copying<_Class, _Base>::copy() const
 template <class _Dst>
 _NS_INLINE _Dst NS::Object::bridgingCast(const void* pObj)
 {
-#ifdef __OBJC__
+#if defined(__OBJC__) && __has_feature(objc_arc)
     return (__bridge _Dst)pObj;
 #else
     return (_Dst)pObj;
-#endif // __OBJC__
+#endif // defined(__OBJC__) && __has_feature(objc_arc)
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
