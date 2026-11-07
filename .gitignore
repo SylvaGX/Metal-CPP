@@ -71,3 +71,9 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# tools/upstream
+.upstream-cache/
+upstream-report.md
+upstream-report.json
+__pycache__/
